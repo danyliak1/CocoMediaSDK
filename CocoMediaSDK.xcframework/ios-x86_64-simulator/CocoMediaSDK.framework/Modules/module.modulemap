@@ -1,0 +1,11 @@
+framework module CocoMediaSDK {
+  umbrella header "CocoMediaSDK.h"
+
+  export *
+  module * { export * }
+}
+
+module CocoMediaSDK.Swift {
+  header "CocoMediaSDK-Swift.h"
+  requires objc
+}

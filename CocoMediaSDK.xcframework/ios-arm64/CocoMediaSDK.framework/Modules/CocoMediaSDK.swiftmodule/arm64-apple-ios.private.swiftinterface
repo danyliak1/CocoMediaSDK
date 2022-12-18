@@ -1,0 +1,809 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.7.2 (swiftlang-5.7.2.135.5 clang-1400.0.29.51)
+// swift-module-flags: -target arm64-apple-ios12.1 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -module-name CocoMediaSDK
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+@_exported import CocoMediaSDK
+import Foundation
+import Swift
+import _Concurrency
+import _StringProcessing
+import os
+public protocol ChannelDelegate : AnyObject {
+  func didChangeStatus(_ channel: CocoMediaSDK.Channel, status from: CocoMediaSDK.Channel.Status, to: CocoMediaSDK.Channel.Status)
+  func didReceive(_ channel: CocoMediaSDK.Channel, rxStream: CocoMediaSDK.RxStream)
+}
+@_hasMissingDesignatedInitializers final public class Channel : Swift.Codable {
+  public enum Status : Swift.Int32, Swift.CaseIterable, Swift.Codable {
+    case COCO_MEDIA_CLIENT_CHANNEL_CREATED
+    case COCO_MEDIA_CLIENT_CHANNEL_JOINING
+    case COCO_MEDIA_CLIENT_CHANNEL_JOINED
+    case COCO_MEDIA_CLIENT_CHANNEL_JOIN_FAILED
+    case COCO_MEDIA_CLIENT_CHANNEL_LEFT
+    case COCO_MEDIA_CLIENT_LEAVE_CHANNEL_FAILED
+    case COCO_MEDIA_CLIENT_CHANNEL_DESTROYED
+    case COCO_MEDIA_CLIENT_CHANNEL_DESTROY_FAILED
+    public init?(rawValue: Swift.Int32)
+    public typealias AllCases = [CocoMediaSDK.Channel.Status]
+    public typealias RawValue = Swift.Int32
+    public static var allCases: [CocoMediaSDK.Channel.Status] {
+      get
+    }
+    public var rawValue: Swift.Int32 {
+      get
+    }
+  }
+  weak final public var delegate: CocoMediaSDK.ChannelDelegate?
+  final public var id: Swift.Int {
+    get
+  }
+  final public var name: Swift.String? {
+    get
+  }
+  final public var metadata: Swift.String? {
+    get
+  }
+  final public var maxStreams: Swift.Int {
+    get
+  }
+  final public var status: CocoMediaSDK.Channel.Status {
+    get
+  }
+  final public var streams: Swift.Set<CocoMediaSDK.Stream> {
+    get
+  }
+  final public var network: CocoMediaSDK.Network {
+    get
+  }
+  @objc deinit
+  final public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+extension CocoMediaSDK.Channel {
+  final public func toCStructure() -> Swift.UnsafeMutableRawPointer
+}
+extension CocoMediaSDK.Channel : Swift.Hashable {
+  public static func == (lhs: CocoMediaSDK.Channel, rhs: CocoMediaSDK.Channel) -> Swift.Bool
+  final public func hash(into hasher: inout Swift.Hasher)
+  final public var hashValue: Swift.Int {
+    get
+  }
+}
+extension CocoMediaSDK.Channel : Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
+  final public var description: Swift.String {
+    get
+  }
+  final public var debugDescription: Swift.String {
+    get
+  }
+}
+extension CocoMediaSDK.Channel {
+  final public func join() throws
+  final public func leave() throws
+  final public func delete(completionHandler: CocoMediaSDK.Handler<Swift.Void>?) throws
+  final public func createStream(descriptor: Swift.String, statusHandler: CocoMediaSDK.Stream.StatusCallbackHandler?) throws -> CocoMediaSDK.TxStream
+}
+@_hasMissingDesignatedInitializers final public class CreateChannelParameters {
+  final public func toCStructure() -> Swift.UnsafeMutableRawPointer
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers final public class DeleteChannelParameters {
+  final public func toCStructure() -> Swift.UnsafeMutableRawPointer
+  @objc deinit
+}
+public enum CocoStatus : Darwin.OSStatus, Swift.Codable {
+  case COCO_STD_STATUS_CODE_MIN
+  case COCO_STD_STATUS_SUCCESS
+  case COCO_STD_STATUS_INVALID
+  case COCO_STD_STATUS_FAILURE
+  case COCO_STD_STATUS_PARTIAL_SUCCESS
+  case COCO_STD_STATUS_TIMEOUT
+  case COCO_STD_STATUS_REJECTED
+  case COCO_STD_STATUS_DEVICE_BUSY
+  case COCO_STD_STATUS_IN_PROGRESS
+  case COCO_STD_STATUS_AUTH_FAILED
+  case COCO_STD_STATUS_RESOURCE_NOT_SUPPORTED
+  case COCO_STD_STATUS_SUCCESS_INSECURE
+  case COCO_STD_STATUS_PARTIAL_SUCCESS_INSECURE
+  case COCO_STD_STATUS_CONNECTIVITY_ERROR
+  case COCO_STD_STATUS_CMD_NOT_SUPPORTED
+  case COCO_STD_STATUS_TOKEN_NOT_SET
+  case COCO_STD_STATUS_TOKEN_REFRESH_FAILED
+  case COCO_STD_STATUS_DISCOVERY_NOT_APPLICABLE
+  case COCO_STD_STATUS_NETWORK_DISCONNECTED
+  case COCO_STD_STATUS_MAX_COUNT_REACHED
+  case COCO_STD_STATUS_DEVICE_UNREACHABLE
+  case COCO_STD_STATUS_NETWORK_BLOCKED
+  case COCO_STD_STATUS_CODE_MAX
+  case COCO_STD_STATUS_CODE_UBOUND
+  public init?(rawValue: Darwin.OSStatus)
+  public typealias RawValue = Darwin.OSStatus
+  public var rawValue: Darwin.OSStatus {
+    get
+  }
+}
+extension os.OSLog {
+  convenience public init(_ bundle: Foundation.Bundle = .main, category: Swift.String? = nil)
+  convenience public init(_ aClass: Swift.AnyClass, category: Swift.String? = nil)
+}
+final public class NetworkManagementRequest {
+  public init(commandId: CocoMediaSDK.Network.Commands, _ params: CocoMediaSDK.CocoNetworkManagementRequest? = nil)
+  final public func execute(completionHandler: @escaping CocoMediaSDK.Handler<CocoMediaSDK.NetworkManagementResponse>) throws
+  @objc deinit
+}
+public struct NetworkManagementResponse {
+}
+public protocol CocoClientAuthDelegate : AnyObject {
+  func authCallback(authorizationEndpoint: Swift.String, tokenEndpoint: Swift.String)
+  func accessTokenCallback(accessToken: Swift.String, status: CocoMediaSDK.Command.Status, context: Swift.UnsafeRawPointer?)
+  func refreshTokenCallback(status: CocoMediaSDK.Command.Status)
+}
+public protocol CocoMediaClientDelegate : AnyObject {
+  func connectStatusCallback(networkId: Swift.String, coconetStatus: CocoMediaSDK.Network.State, coconetContext: Swift.UnsafeRawPointer?)
+  func networkManagementStatusCallback(commandStatus: CocoMediaSDK.NetworkManagementResponse, cmdContext: Swift.UnsafeRawPointer?)
+  func mediaManagementStatusCallback(commandStatus: CocoMediaSDK.MediaManagementResponse, cmdContext: Swift.UnsafeRawPointer?)
+  func channelStatusCallback(channel: CocoMediaSDK.Channel, status: CocoMediaSDK.Channel.Status, context: Swift.UnsafeRawPointer?)
+  func streamStatusCallback(stream: CocoMediaSDK.Stream, status: CocoMediaSDK.Stream.Status, context: Swift.UnsafeRawPointer?)
+  func streamInfoCallback(stream: CocoMediaSDK.Stream, status: CocoMediaSDK.Stream.Status, joinChannelContext: Swift.UnsafeRawPointer?)
+  func dataReceiveCallback(stream: CocoMediaSDK.Stream, frame: CocoMediaSDK.PackedFrame, context: Swift.UnsafeRawPointer?)
+  func threadAttachCallback()
+  func threadDetachCallback()
+  func nodeConnectStatusCallback(networkId: Swift.String, nodeId: Swift.UInt32, nodeType: Swift.Int32, isOnline: Swift.Int32, coconetContext: Swift.UnsafeRawPointer?)
+  func dataCallback(data: Swift.String, srcNodeId: Swift.UInt32, coconetContext: Swift.UnsafeRawPointer?)
+  func contentInfoCallback(metadata: Swift.String, contentTime: Swift.Int32, srcNodeId: Swift.UInt32, coconetContext: Swift.UnsafeRawPointer?)
+}
+extension Foundation.Data {
+  public var hex: Swift.String {
+    get
+  }
+}
+public protocol TxStreamDelegate : CocoMediaSDK.StreamDelegate {
+}
+@_hasMissingDesignatedInitializers final public class TxStream : CocoMediaSDK.Stream {
+  weak final public var delegate: CocoMediaSDK.TxStreamDelegate?
+  @objc deinit
+}
+extension CocoMediaSDK.TxStream {
+  final public func toCStructure() -> Swift.UnsafeMutableRawPointer
+}
+extension CocoMediaSDK.TxStream {
+  final public func create(statusHandler: CocoMediaSDK.TxStream.StatusCallbackHandler?) throws
+  final public func destroy() throws
+  final public func send(_ frame: CocoMediaSDK.PackedFrame) throws
+}
+public protocol NodeDelegate : AnyObject {
+  func didReceiveData(_ node: CocoMediaSDK.Node, data: Swift.String?)
+  func didReceiveContentInfo(_ node: CocoMediaSDK.Node, metadata: Swift.String?, time stamp: Foundation.TimeInterval)
+  func didChangeStatus(_ node: CocoMediaSDK.Node, isOnline: Swift.Bool)
+}
+@_hasMissingDesignatedInitializers final public class Node : Swift.Codable {
+  public enum `Type` : Swift.Int32, Swift.Codable {
+    case COCO_STD_NODE_TYPE_MIN
+    case COCO_STD_NODE_TYPE_NETWORK
+    case COCO_STD_NODE_TYPE_DEVICE
+    case COCO_STD_NODE_TYPE_CLIENT
+    case COCO_STD_NODE_TYPE_MAX
+    case COCO_STD_NODE_TYPE_UBOUND
+    public init?(rawValue: Swift.Int32)
+    public typealias RawValue = Swift.Int32
+    public var rawValue: Swift.Int32 {
+      get
+    }
+  }
+  final public var type: CocoMediaSDK.Node.`Type` {
+    get
+  }
+  final public var networkId: Swift.String {
+    get
+  }
+  final public var id: Swift.Int {
+    get
+  }
+  final public var isOnline: Swift.Bool {
+    get
+  }
+  weak final public var delegate: CocoMediaSDK.NodeDelegate?
+  final public var network: CocoMediaSDK.Network {
+    get
+  }
+  @objc deinit
+  final public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+extension CocoMediaSDK.Node : Swift.Hashable {
+  public static func == (lhs: CocoMediaSDK.Node, rhs: CocoMediaSDK.Node) -> Swift.Bool
+  final public func hash(into hasher: inout Swift.Hasher)
+  final public var hashValue: Swift.Int {
+    get
+  }
+}
+extension CocoMediaSDK.Node : Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
+  final public var description: Swift.String {
+    get
+  }
+  final public var debugDescription: Swift.String {
+    get
+  }
+}
+public class CocoMediaConfig : Swift.Codable {
+  public init(clientId: Swift.String? = nil, authDelegate: CocoMediaSDK.CocoClientAuthDelegate)
+  public var cwdPath: Swift.String
+  public var clientId: Swift.String
+  public var downloadPath: Swift.String
+  public var userAgent: Swift.String
+  public var timers: CocoMediaSDK.ConnectivityTimers?
+  public var accessList: Swift.String
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+extension CocoMediaSDK.CocoMediaConfig {
+  public func toCStructure() -> Swift.UnsafeMutableRawPointer
+}
+extension CocoMediaSDK.CocoMediaConfig : Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers final public class PackedFrame : Swift.Codable {
+  convenience public init(index: Swift.Int = 0, mime: CocoMediaSDK.PackedFrame.MimeType = .COCO_MEDIA_CLIENT_MIME_TYPE_VIDEO_H264, type: CocoMediaSDK.PackedFrame.`Type` = .COCO_MEDIA_CLIENT_FRAME_TYPE_KEY, duration: Swift.Int = 0, time: Swift.Int = 0, data: Foundation.Data? = nil, size: Swift.Int = 0)
+  public enum MimeType : Swift.Int32, Swift.Codable, Swift.CaseIterable {
+    case COCO_MEDIA_CLIENT_MIME_TYPE_MIN
+    case COCO_MEDIA_CLIENT_MIME_TYPE_VIDEO_H264
+    case COCO_MEDIA_CLIENT_MIME_TYPE_AUDIO_AAC
+    case COCO_MEDIA_CLIENT_MIME_TYPE_TEXT
+    case COCO_MEDIA_CLIENT_MIME_TYPE_MAX
+    case COCO_MEDIA_CLIENT_MIME_TYPE_UNBOUND
+    public init?(rawValue: Swift.Int32)
+    public typealias AllCases = [CocoMediaSDK.PackedFrame.MimeType]
+    public typealias RawValue = Swift.Int32
+    public static var allCases: [CocoMediaSDK.PackedFrame.MimeType] {
+      get
+    }
+    public var rawValue: Swift.Int32 {
+      get
+    }
+  }
+  public enum `Type` : Swift.Int32, Swift.Codable, Swift.CaseIterable {
+    case COCO_MEDIA_CLIENT_FRAME_TYPE_MIN
+    case COCO_MEDIA_CLIENT_FRAME_TYPE_NONE
+    case COCO_MEDIA_CLIENT_FRAME_TYPE_KEY
+    case COCO_MEDIA_CLIENT_FRAME_TYPE_MAX
+    case COCO_MEDIA_CLIENT_FRAME_UNBOUND
+    public init?(rawValue: Swift.Int32)
+    public typealias AllCases = [CocoMediaSDK.PackedFrame.`Type`]
+    public typealias RawValue = Swift.Int32
+    public static var allCases: [CocoMediaSDK.PackedFrame.`Type`] {
+      get
+    }
+    public var rawValue: Swift.Int32 {
+      get
+    }
+  }
+  public static let FRAME_HEADER_SIZE: Swift.Int
+  final public var index: Swift.Int {
+    get
+  }
+  final public var mime: CocoMediaSDK.PackedFrame.MimeType {
+    get
+  }
+  final public var type: CocoMediaSDK.PackedFrame.`Type` {
+    get
+  }
+  final public var duration: Swift.Int {
+    get
+  }
+  final public var time: Swift.Int {
+    get
+  }
+  final public var data: Foundation.Data? {
+    get
+  }
+  final public var size: Swift.Int {
+    get
+  }
+  @objc deinit
+  final public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+extension CocoMediaSDK.PackedFrame : Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
+  final public var description: Swift.String {
+    get
+  }
+  final public var debugDescription: Swift.String {
+    get
+  }
+}
+public struct GetNetworksResponse : Swift.Codable {
+  public init(_ cStruct: Swift.UnsafeRawPointer)
+  public var networks: [CocoMediaSDK.Network]? {
+    get
+  }
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct CreateNetworkResponse : Swift.Codable {
+  public init(_ cStruct: Swift.UnsafeRawPointer)
+  public var networkId: Swift.String {
+    get
+  }
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct GetUserResponse : Swift.Codable {
+  public init(_ cStruct: Swift.UnsafeRawPointer)
+  public var users: [CocoMediaSDK.User]? {
+    get
+  }
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public protocol StreamDelegate : AnyObject {
+  func didChangeStatus(_ stream: CocoMediaSDK.Stream, status from: CocoMediaSDK.Stream.Status, to: CocoMediaSDK.Stream.Status)
+}
+@_hasMissingDesignatedInitializers public class Stream : Swift.Codable {
+  public typealias StatusCallbackHandler = (CocoMediaSDK.Stream.Status) -> Swift.Void
+  open var statusCallback: CocoMediaSDK.Stream.StatusCallbackHandler?
+  public enum Status : Swift.Int32, Swift.Codable, Swift.CaseIterable {
+    case COCO_MEDIA_CLIENT_STREAM_CREATED
+    case COCO_MEDIA_CLIENT_STREAM_FAILED
+    case COCO_MEDIA_CLIENT_STREAM_STARTING
+    case COCO_MEDIA_CLIENT_STREAM_STARTED
+    case COCO_MEDIA_CLIENT_STREAM_CLOSED
+    case COCO_MEDIA_CLIENT_STREAM_DESTROYED
+    public init?(rawValue: Swift.Int32)
+    public typealias AllCases = [CocoMediaSDK.Stream.Status]
+    public typealias RawValue = Swift.Int32
+    public static var allCases: [CocoMediaSDK.Stream.Status] {
+      get
+    }
+    public var rawValue: Swift.Int32 {
+      get
+    }
+  }
+  public var id: Swift.Int {
+    get
+  }
+  public var networkId: Swift.String {
+    get
+  }
+  public var sourceNodeId: Swift.Int {
+    get
+  }
+  public var channelId: Swift.Int {
+    get
+  }
+  public var sdp: Swift.String? {
+    get
+  }
+  public var status: CocoMediaSDK.Stream.Status {
+    get
+  }
+  public var network: CocoMediaSDK.Network {
+    get
+  }
+  public var channel: CocoMediaSDK.Channel {
+    get
+  }
+  public var node: CocoMediaSDK.Node {
+    get
+  }
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+extension CocoMediaSDK.Stream : Swift.Hashable {
+  public static func == (lhs: CocoMediaSDK.Stream, rhs: CocoMediaSDK.Stream) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension CocoMediaSDK.Stream : Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+public protocol NetworkDelegate : AnyObject {
+  func didChangeStatus(_ network: CocoMediaSDK.Network, status from: CocoMediaSDK.Network.State, to: CocoMediaSDK.Network.State)
+  func didReceiveData(_ network: CocoMediaSDK.Network, from node: CocoMediaSDK.Node, data: Swift.String?)
+  func didReceiveContentInfo(_ network: CocoMediaSDK.Network, from node: CocoMediaSDK.Node, metadata: Swift.String?, time stamp: Foundation.TimeInterval)
+}
+@_hasMissingDesignatedInitializers final public class Network : Swift.Codable, Swift.Identifiable {
+  public enum AccessType : Swift.Int32, Swift.Codable {
+    case ACCESS_TYPE_MIN
+    case ACCESS_TYPE_LOCAL
+    case ACCESS_TYPE_REMOTE
+    case ACCESS_TYPE_MAX
+    case ACCESS_TYPE_UBOUND
+    public init?(rawValue: Swift.Int32)
+    public typealias RawValue = Swift.Int32
+    public var rawValue: Swift.Int32 {
+      get
+    }
+  }
+  public enum `Type` : Swift.Int32, Swift.Codable {
+    case COCO_CLIENT_COCONET_TYPE_MIN
+    case COCO_CLIENT_COCONET_TYPE_IOT
+    case COCO_CLIENT_COCONET_TYPE_CALL_NET
+    case COCO_CLIENT_COCONET_TYPE_MAX
+    case COCO_CLIENT_COCONET_TYPE_UBOUND
+    public init?(rawValue: Swift.Int32)
+    public typealias RawValue = Swift.Int32
+    public var rawValue: Swift.Int32 {
+      get
+    }
+  }
+  public enum Status : Swift.Int32, Swift.Codable {
+    case COCO_MEDIA_CLIENT_JOIN_STATUS_MIN
+    case COCO_MEDIA_CLIENT_JOIN_STATUS_NOT_JOINED
+    case COCO_MEDIA_CLIENT_JOIN_STATUS_JOINED
+    case COCO_MEDIA_CLIENT_JOIN_STATUS_PENDING
+    case COCO_MEDIA_CLIENT_JOIN_STATUS_MAX
+    case COCO_MEDIA_CLIENT_JOIN_STATUS_UNBOUND
+    public init?(rawValue: Swift.Int32)
+    public typealias RawValue = Swift.Int32
+    public var rawValue: Swift.Int32 {
+      get
+    }
+  }
+  public enum State : Swift.Int32, Swift.Codable {
+    case COCO_CLIENT_COCONET_STATE_MIN
+    case COCO_CLIENT_CONNECTED
+    case COCO_CLIENT_CONNECTING
+    case COCO_CLIENT_CONNECT_ERROR
+    case COCO_CLIENT_COCONET_RESET
+    case COCO_CLIENT_DISCONNECTED
+    case COCO_CLIENT_COCONET_BLOCKED
+    case COCO_CLIENT_REMOTE_CONNECTED
+    case COCO_CLIENT_COCONET_STATE_MAX
+    case COCO_CLIENT_COCONET_STATE_UBOUND
+    public init?(rawValue: Swift.Int32)
+    public typealias RawValue = Swift.Int32
+    public var rawValue: Swift.Int32 {
+      get
+    }
+  }
+  public enum Commands : Swift.Int32, Swift.Codable {
+    case COCO_MEDIA_NW_CMD_TYPE_MIN
+    case COCO_MEDIA_NW_CMD_GET_ALL_NETWORKS
+    case COCO_MEDIA_NW_CMD_CREATE_NETWORK
+    case COCO_MEDIA_NW_CMD_DELETE_NETWORK
+    case COCO_MEDIA_NW_CMD_GET_USERS
+    case COCO_MEDIA_NW_CMD_REMOVE_USER
+    case COCO_MEDIA_NW_CMD_INVITE_USER
+    case COCO_MEDIA_NW_CMD_INVITE_EXTERNAL_USER
+    case COCO_MEDIA_NW_CMD_TYPE_MAX
+    case COCO_MEDIA_NW_CMD_TYPE_UBOUND
+    public init?(rawValue: Swift.Int32)
+    public typealias RawValue = Swift.Int32
+    public var rawValue: Swift.Int32 {
+      get
+    }
+  }
+  final public var id: Swift.String {
+    get
+  }
+  final public var name: Swift.String? {
+    get
+  }
+  final public var userRole: CocoMediaSDK.User.Role {
+    get
+  }
+  final public var accessType: CocoMediaSDK.Network.AccessType {
+    get
+  }
+  final public var type: CocoMediaSDK.Network.`Type` {
+    get
+  }
+  final public var status: CocoMediaSDK.Network.State {
+    get
+  }
+  final public var isBlocked: Swift.Bool {
+    get
+  }
+  final public var metadata: Swift.String? {
+    get
+  }
+  final public var channels: Swift.Set<CocoMediaSDK.Channel> {
+    get
+  }
+  final public var nodes: Swift.Set<CocoMediaSDK.Node> {
+    get
+  }
+  weak final public var delegate: CocoMediaSDK.NetworkDelegate?
+  public typealias ID = Swift.String
+  @objc deinit
+  final public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+extension CocoMediaSDK.Network {
+  final public func toCStructure() -> Swift.UnsafeMutableRawPointer
+}
+extension CocoMediaSDK.Network : Swift.Hashable {
+  public static func == (lhs: CocoMediaSDK.Network, rhs: CocoMediaSDK.Network) -> Swift.Bool
+  final public func hash(into hasher: inout Swift.Hasher)
+  final public var hashValue: Swift.Int {
+    get
+  }
+}
+extension CocoMediaSDK.Network : Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
+  final public var description: Swift.String {
+    get
+  }
+  final public var debugDescription: Swift.String {
+    get
+  }
+}
+extension CocoMediaSDK.Network {
+  final public class func getAllNetworks(completionHandler: @escaping CocoMediaSDK.Handler<[CocoMediaSDK.Network]?>) throws
+  final public class func create(name: Swift.String, metadata: Swift.String, type: CocoMediaSDK.Network.`Type`, completionHandler: @escaping CocoMediaSDK.Handler<CocoMediaSDK.Network>) throws
+  final public func delete(completionHandler: @escaping CocoMediaSDK.Handler<Swift.Void>) throws
+  final public func connect() throws
+  final public func disconnect() throws
+  final public func createChannel(name: Swift.String, metadata: Swift.String, _ maxStreams: Swift.Int = -1, completionHandler: CocoMediaSDK.Handler<CocoMediaSDK.Channel>?) throws
+  final public func getChannels(completionHandler: CocoMediaSDK.Handler<[CocoMediaSDK.Channel]>?) throws
+  final public func deleteChannel(channelId: Swift.Int, completionHandler: CocoMediaSDK.Handler<Swift.Void>?) throws
+  final public func inviteUser(parameters: CocoMediaSDK.InviteNetworkUserParameters, completionHandler: CocoMediaSDK.Handler<Swift.Void>?) throws
+  final public func inviteUser(externalUserId: Swift.String, completionHandler: CocoMediaSDK.Handler<Swift.Void>?) throws
+  final public func getUsers(completionHandler: CocoMediaSDK.Handler<[CocoMediaSDK.User]?>?) throws
+  final public func removeUser(user id: Swift.String, completionHandler: CocoMediaSDK.Handler<Swift.Void>?) throws
+  final public func sendMessage(message: Swift.String, destNodeIdArr: Swift.UInt32? = nil, destNodeIdArrCnt: Swift.UInt32 = 0)
+}
+public enum CocoRequestParameterError : Swift.Error {
+  case badRequest(parameter: Swift.String)
+}
+public struct CreateChannelResponse : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct GetChannelsResponse : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+extension CocoMediaSDK.CocoMediaClient.CocoMediaClientError : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+extension CocoMediaSDK.CocoMediaClient.CocoMediaClientError : Foundation.LocalizedError {
+  public var errorDescription: Swift.String? {
+    get
+  }
+}
+extension CocoMediaSDK.CocoMediaClient.CommandError : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+extension CocoMediaSDK.CocoMediaClient.CommandError : Foundation.LocalizedError {
+  public var errorDescription: Swift.String? {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers public class CocoMediaClient {
+  public enum CocoMediaClientError : Swift.Int32, Swift.Error, Swift.Codable {
+    case COCO_MEDIA_CLIENT_ERROR_MIN
+    case COCO_MEDIA_CLIENT_API_SUCCESS
+    case COCO_MEDIA_CLIENT_API_FAILURE
+    case COCO_MEDIA_CLIENT_API_EINVAL
+    case COCO_MEDIA_CLIENT_API_EPERM
+    case COCO_MEDIA_CLIENT_API_ETIME
+    case COCO_MEDIA_CLIENT_API_TOKEN_NOT_SET
+    case COCO_MEDIA_CLIENT_API_NOT_SUPPORTED
+    case COCO_MEDIA_CLIENT_ERROR_MAX
+    case COCO_MEDIA_CLIENT_ERROR_UBOUND
+    public init?(rawValue: Swift.Int32)
+    public typealias RawValue = Swift.Int32
+    public var rawValue: Swift.Int32 {
+      get
+    }
+  }
+  public enum CommandError : Swift.Error {
+    case runtimeError(status: CocoMediaSDK.Command.Status, message: Swift.String)
+  }
+  public static let shared: CocoMediaSDK.CocoMediaClient
+  weak public static var delegate: CocoMediaSDK.CocoMediaClientDelegate?
+  public var networks: Swift.Set<CocoMediaSDK.Network> {
+    get
+  }
+  public class func setup(_ config: CocoMediaSDK.CocoMediaConfig) throws
+  @objc deinit
+}
+extension CocoMediaSDK.CocoMediaClient {
+  public func set(token: Swift.String) throws
+  public func getAllNetworks(completionHandler: @escaping CocoMediaSDK.Handler<[CocoMediaSDK.Network]?>) throws
+}
+@_hasMissingDesignatedInitializers final public class MediaManagementRequest {
+  public enum Commands : Swift.Int32, Swift.Codable, Swift.CaseIterable {
+    case COCO_MEDIA_MGMT_CMD_TYPE_MIN
+    case COCO_MEDIA_CLIENT_CREATE_CHANNEL
+    case COCO_MEDIA_CLIENT_DELETE_CHANNEL
+    case COCO_MEDIA_CLIENT_GET_AVAILABLE_CHANNELS
+    case COCO_MEDIA_MGMT_CMD_TYPE_MAX
+    case COCO_MEDIA_MGMT_CMD_TYPE_UNBOUND
+    public init?(rawValue: Swift.Int32)
+    public typealias AllCases = [CocoMediaSDK.MediaManagementRequest.Commands]
+    public typealias RawValue = Swift.Int32
+    public static var allCases: [CocoMediaSDK.MediaManagementRequest.Commands] {
+      get
+    }
+    public var rawValue: Swift.Int32 {
+      get
+    }
+  }
+  final public func execute(completionHandler: @escaping CocoMediaSDK.Handler<CocoMediaSDK.MediaManagementResponse>) throws
+  @objc deinit
+}
+public struct MediaManagementResponse {
+}
+@_hasMissingDesignatedInitializers final public class ConnectivityTimers : Swift.Codable {
+  final public var fastRetryDuration: Swift.UInt32
+  final public var backgroundMaxRetryPeriod: Swift.UInt32
+  final public var foregroundMaxRetryPeriod: Swift.UInt32
+  final public var keepAliveInterval: Swift.UInt32
+  final public var keepAliveTimeout: Swift.UInt32
+  @objc deinit
+  final public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+extension CocoMediaSDK.ConnectivityTimers {
+  final public func toCStructure() -> Swift.UnsafeMutableRawPointer
+}
+public protocol CocoNetworkManagementRequest {
+}
+final public class CreateNetworkParameters : CocoMediaSDK.CocoNetworkManagementRequest {
+  public init(name: Swift.String, metadata: Swift.String, type: CocoMediaSDK.Network.`Type`)
+  convenience public init(network: CocoMediaSDK.Network, metadata: Swift.String) throws
+  final public func toCStructure() -> Swift.UnsafeMutableRawPointer
+  @objc deinit
+}
+final public class DeleteNetworkParameters : CocoMediaSDK.CocoNetworkManagementRequest {
+  public init(id: Swift.String)
+  convenience public init(network: CocoMediaSDK.Network)
+  @objc deinit
+}
+final public class GetNetworkUsersParameters : CocoMediaSDK.CocoNetworkManagementRequest {
+  public init(of networkId: Swift.String)
+  convenience public init(network: CocoMediaSDK.Network)
+  final public func toCStructure() -> Swift.UnsafeMutableRawPointer
+  @objc deinit
+}
+final public class RemoveNetworkUserParameters : CocoMediaSDK.CocoNetworkManagementRequest {
+  public init(id: Swift.String, from networkId: Swift.String)
+  convenience public init(this user: CocoMediaSDK.User, from network: CocoMediaSDK.Network)
+  final public func toCStructure() -> Swift.UnsafeMutableRawPointer
+  @objc deinit
+}
+final public class InviteNetworkUserParameters : CocoMediaSDK.CocoNetworkManagementRequest {
+  public init(username: Swift.String, to networkId: Swift.String, with role: CocoMediaSDK.User.Role, with access: CocoMediaSDK.Network.AccessType)
+  convenience public init(this user: CocoMediaSDK.User, to network: CocoMediaSDK.Network)
+  final public func toCStructure() -> Swift.UnsafeMutableRawPointer
+  @objc deinit
+}
+final public class InviteExternalUserParameters : CocoMediaSDK.CocoNetworkManagementRequest {
+  public init(id: Swift.String, to networkId: Swift.String)
+  convenience public init(this user: CocoMediaSDK.User, to network: CocoMediaSDK.Network)
+  final public func toCStructure() -> Swift.UnsafeMutableRawPointer
+  @objc deinit
+}
+public protocol RxStreamDelegate : CocoMediaSDK.StreamDelegate {
+  func didReceiveFrame(_ stream: CocoMediaSDK.Stream, frame: CocoMediaSDK.PackedFrame)
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers final public class RxStream : CocoMediaSDK.Stream {
+  weak final public var delegate: CocoMediaSDK.RxStreamDelegate?
+  required public init(from decoder: Swift.Decoder) throws
+  @objc deinit
+}
+extension CocoMediaSDK.RxStream {
+  final public func start(_ statusHandler: CocoMediaSDK.RxStream.StatusCallbackHandler?) throws
+  final public func stop() throws
+}
+public typealias Handler<T> = (Swift.Result<T, Swift.Error>) -> Swift.Void
+public protocol CocoCommandResponse {
+  var response: Any? { get }
+}
+public enum Command {
+  public typealias Status = CocoMediaSDK.CocoStatus
+}
+@_hasMissingDesignatedInitializers final public class User : Swift.Codable {
+  public enum Role : Swift.Int32, Swift.Codable {
+    case USER_ROLE_MIN
+    case USER_ROLE_OWNER
+    case USER_ROLE_ADMIN
+    case USER_ROLE_GUEST
+    case USER_ROLE_MAX
+    case USER_ROLE_UBOUND
+    public init?(rawValue: Swift.Int32)
+    public typealias RawValue = Swift.Int32
+    public var rawValue: Swift.Int32 {
+      get
+    }
+  }
+  final public var id: Swift.String {
+    get
+  }
+  final public var username: Swift.String {
+    get
+  }
+  final public var name: Swift.String? {
+    get
+  }
+  final public var imageUrl: Foundation.URL? {
+    get
+  }
+  final public var status: CocoMediaSDK.Network.Status {
+    get
+  }
+  final public var role: CocoMediaSDK.User.Role {
+    get
+  }
+  final public var federatedId: Swift.String? {
+    get
+  }
+  @objc deinit
+  final public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+extension CocoMediaSDK.User : Swift.Hashable {
+  public static func == (lhs: CocoMediaSDK.User, rhs: CocoMediaSDK.User) -> Swift.Bool
+  final public func hash(into hasher: inout Swift.Hasher)
+  final public var hashValue: Swift.Int {
+    get
+  }
+}
+extension CocoMediaSDK.User : Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
+  final public var description: Swift.String {
+    get
+  }
+  final public var debugDescription: Swift.String {
+    get
+  }
+}
+extension CocoMediaSDK.Channel.Status : Swift.Equatable {}
+extension CocoMediaSDK.Channel.Status : Swift.Hashable {}
+extension CocoMediaSDK.Channel.Status : Swift.RawRepresentable {}
+extension CocoMediaSDK.CocoStatus : Swift.Equatable {}
+extension CocoMediaSDK.CocoStatus : Swift.Hashable {}
+extension CocoMediaSDK.CocoStatus : Swift.RawRepresentable {}
+extension CocoMediaSDK.Node.`Type` : Swift.Equatable {}
+extension CocoMediaSDK.Node.`Type` : Swift.Hashable {}
+extension CocoMediaSDK.Node.`Type` : Swift.RawRepresentable {}
+extension CocoMediaSDK.PackedFrame.MimeType : Swift.Equatable {}
+extension CocoMediaSDK.PackedFrame.MimeType : Swift.Hashable {}
+extension CocoMediaSDK.PackedFrame.MimeType : Swift.RawRepresentable {}
+extension CocoMediaSDK.PackedFrame.`Type` : Swift.Equatable {}
+extension CocoMediaSDK.PackedFrame.`Type` : Swift.Hashable {}
+extension CocoMediaSDK.PackedFrame.`Type` : Swift.RawRepresentable {}
+extension CocoMediaSDK.Stream.Status : Swift.Equatable {}
+extension CocoMediaSDK.Stream.Status : Swift.Hashable {}
+extension CocoMediaSDK.Stream.Status : Swift.RawRepresentable {}
+extension CocoMediaSDK.Network.AccessType : Swift.Equatable {}
+extension CocoMediaSDK.Network.AccessType : Swift.Hashable {}
+extension CocoMediaSDK.Network.AccessType : Swift.RawRepresentable {}
+extension CocoMediaSDK.Network.`Type` : Swift.Equatable {}
+extension CocoMediaSDK.Network.`Type` : Swift.Hashable {}
+extension CocoMediaSDK.Network.`Type` : Swift.RawRepresentable {}
+extension CocoMediaSDK.Network.Status : Swift.Equatable {}
+extension CocoMediaSDK.Network.Status : Swift.Hashable {}
+extension CocoMediaSDK.Network.Status : Swift.RawRepresentable {}
+extension CocoMediaSDK.Network.State : Swift.Equatable {}
+extension CocoMediaSDK.Network.State : Swift.Hashable {}
+extension CocoMediaSDK.Network.State : Swift.RawRepresentable {}
+extension CocoMediaSDK.Network.Commands : Swift.Equatable {}
+extension CocoMediaSDK.Network.Commands : Swift.Hashable {}
+extension CocoMediaSDK.Network.Commands : Swift.RawRepresentable {}
+extension CocoMediaSDK.CocoMediaClient.CocoMediaClientError : Swift.Equatable {}
+extension CocoMediaSDK.CocoMediaClient.CocoMediaClientError : Swift.Hashable {}
+extension CocoMediaSDK.CocoMediaClient.CocoMediaClientError : Swift.RawRepresentable {}
+extension CocoMediaSDK.MediaManagementRequest.Commands : Swift.Equatable {}
+extension CocoMediaSDK.MediaManagementRequest.Commands : Swift.Hashable {}
+extension CocoMediaSDK.MediaManagementRequest.Commands : Swift.RawRepresentable {}
+extension CocoMediaSDK.User.Role : Swift.Equatable {}
+extension CocoMediaSDK.User.Role : Swift.Hashable {}
+extension CocoMediaSDK.User.Role : Swift.RawRepresentable {}
