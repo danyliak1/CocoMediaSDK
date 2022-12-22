@@ -6,7 +6,7 @@
 	<dict>
 		<key>Frameworks/libcocomediasdk_static.a</key>
 		<data>
-		9T5mDgDd5Lc/Dpa6THfVVZ7oiH8=
+		Hv4mQJS6F/3OF9Gl8DtqFErc/Hk=
 		</data>
 		<key>Headers/CocoMediaSDK-Swift.h</key>
 		<data>
@@ -42,7 +42,7 @@
 		</data>
 		<key>Modules/CocoMediaSDK.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		46BPm15l/6q0VAvkEYVkMmwvrto=
+		tJ7udcSgEyom5huYBLYra5KJIAM=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -55,7 +55,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			NQP0521lHIsJdY6xGOqrssoz8Hwq5ijqhtZo/ONmfs8=
+			+WY1DbAvjI9NnsSe9E7bCbEKGtao0vYKdemfNXjy/P4=
 			</data>
 		</dict>
 		<key>Headers/CocoMediaSDK-Swift.h</key>
@@ -111,7 +111,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			QBLGx9MeAUmNuNFpIhzHu1FJxPptrus4c9Fug8pGy/U=
+			q+hLG7t1xrJNnRdkqpO+GVlk5OtjnGVBzhYGL3lsC6k=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
